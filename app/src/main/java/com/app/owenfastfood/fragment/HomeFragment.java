@@ -33,12 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends BaseFragment {
-
     private FragmentHomeBinding mFragmentHomeBinding;
-
     private List<Cart> mListCart;
     private List<Cart> mListCartPopular;
-
     private final Handler mHandlerBanner = new Handler();
     private final Runnable mRunnableBanner = new Runnable() {
         @Override
@@ -53,15 +50,12 @@ public class HomeFragment extends BaseFragment {
             mFragmentHomeBinding.viewpager2.setCurrentItem(mFragmentHomeBinding.viewpager2.getCurrentItem() + 1);
         }
     };
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mFragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
-
         getListFoodFromFirebase("");
         initListener();
-
         return mFragmentHomeBinding.getRoot();
     }
 
@@ -77,11 +71,9 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 String strKey = s.toString().trim();
@@ -93,7 +85,6 @@ public class HomeFragment extends BaseFragment {
         });
 
         mFragmentHomeBinding.imgSearch.setOnClickListener(view -> searchFood());
-
         mFragmentHomeBinding.edtSearchName.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 searchFood();
@@ -107,7 +98,6 @@ public class HomeFragment extends BaseFragment {
         FoodPopularAdapter mFoodPopularAdapter = new FoodPopularAdapter(getListFoodPopular(), this::goToFoodDetail);
         mFragmentHomeBinding.viewpager2.setAdapter(mFoodPopularAdapter);
         mFragmentHomeBinding.indicator3.setViewPager(mFragmentHomeBinding.viewpager2);
-
         mFragmentHomeBinding.viewpager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -121,7 +111,6 @@ public class HomeFragment extends BaseFragment {
     private void displayListFoodSuggest() {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mFragmentHomeBinding.rcvFood.setLayoutManager(gridLayoutManager);
-
         FoodGridAdapter mFoodGridAdapter = new FoodGridAdapter(mListCart, this::goToFoodDetail);
         mFragmentHomeBinding.rcvFood.setAdapter(mFoodGridAdapter);
     }
@@ -153,7 +142,6 @@ public class HomeFragment extends BaseFragment {
                     if (cart == null) {
                         return;
                     }
-
                     if (StringUtil.isEmpty(key)) {
                         mListCart.add(0, cart);
                     } else {
@@ -166,7 +154,6 @@ public class HomeFragment extends BaseFragment {
                 displayListFoodPopular();
                 displayListFoodSuggest();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 GlobalFunction.showToastMessage(getActivity(), getString(R.string.ms_get_date_error));

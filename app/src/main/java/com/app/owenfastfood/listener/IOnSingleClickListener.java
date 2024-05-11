@@ -4,10 +4,8 @@ import android.os.SystemClock;
 import android.view.View;
 
 public abstract class IOnSingleClickListener implements View.OnClickListener {
-
-    private static final long MIN_CLICK_INTERVAL = 600;
+    private static final long MIN_INTERVAL = 600;
     private long mLastClickTime;
-
     public abstract void onSingleClick(View v);
 
     @Override
@@ -15,7 +13,7 @@ public abstract class IOnSingleClickListener implements View.OnClickListener {
         long currentClickTime = SystemClock.uptimeMillis();
         long elapsedTime = currentClickTime - mLastClickTime;
         mLastClickTime = currentClickTime;
-        if (elapsedTime <= MIN_CLICK_INTERVAL)
+        if (elapsedTime <= MIN_INTERVAL)
             return;
         onSingleClick(v);
     }

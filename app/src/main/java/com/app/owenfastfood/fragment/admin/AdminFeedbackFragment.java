@@ -24,16 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminFeedbackFragment extends BaseFragment {
-
     private FragmentAdminFeedbackBinding mFragmentAdminFeedbackBinding;
     private List<Feedback> mListFeedback;
     private FeedbackAdapter mFeedbackAdapter;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mFragmentAdminFeedbackBinding = FragmentAdminFeedbackBinding.inflate(inflater, container, false);
-
         initView();
         getListFeedback();
         return mFragmentAdminFeedbackBinding.getRoot();
@@ -58,8 +55,7 @@ public class AdminFeedbackFragment extends BaseFragment {
         if (getActivity() == null) {
             return;
         }
-        ControllerApplication.get(getActivity()).getFeedbackDatabaseReference()
-                .addValueEventListener(new ValueEventListener() {
+        ControllerApplication.get(getActivity()).getFeedbackDatabaseReference().addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (mListFeedback != null) {
@@ -76,7 +72,6 @@ public class AdminFeedbackFragment extends BaseFragment {
                         mFeedbackAdapter = new FeedbackAdapter(mListFeedback);
                         mFragmentAdminFeedbackBinding.rcvFeedback.setAdapter(mFeedbackAdapter);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                     }

@@ -38,23 +38,19 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 public class CartFragment extends BaseFragment {
-
     private FragmentCartBinding mFragmentCartBinding;
     private CartAdapter mCartAdapter;
     private List<Cart> mListCart;
     private int mAmount;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mFragmentCartBinding = FragmentCartBinding.inflate(inflater, container, false);
-
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
         displayListFoodInCart();
         mFragmentCartBinding.tvOrderCart.setOnClickListener(v -> onClickOrderCart());
-
         return mFragmentCartBinding.getRoot();
     }
 
@@ -69,8 +65,6 @@ public class CartFragment extends BaseFragment {
         if (getActivity() == null) {
             return;
         }
-
-
         if (isUserLoggedIn()) {
             String currentUser = getCurrentUser();
             mListCart = FoodDatabase.getInstance(getActivity()).foodDAO().getListFoodCartByUser(currentUser);
@@ -92,37 +86,28 @@ public class CartFragment extends BaseFragment {
         }
     }
 
-
     private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mFragmentCartBinding.rcvFoodCart.setLayoutManager(linearLayoutManager);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
         mFragmentCartBinding.rcvFoodCart.addItemDecoration(itemDecoration);
-
         if (mListCart != null && !mListCart.isEmpty()) {
             mCartAdapter = new CartAdapter(mListCart, new CartAdapter.IClickListener() {
                 @Override
                 public void clickDeteteFood(Cart cart, int position) {
                     deleteFoodFromCart(cart, position);
                 }
-
                 @Override
                 public void updateItemFood(Cart cart, int position) {
                     FoodDatabase.getInstance(getActivity()).foodDAO().updateFood(cart);
                     mCartAdapter.notifyItemChanged(position);
-
                     calculateTotalPrice();
                 }
             });
             mFragmentCartBinding.rcvFoodCart.setAdapter(mCartAdapter);
-
             calculateTotalPrice();
         }
-//        else {
-//            mFragmentCartBinding.tvEmptyCart.setVisibility(View.VISIBLE);
-//        }
     }
-
 
     @SuppressLint("NotifyDataSetChanged")
     private void clearCart() {
@@ -141,48 +126,35 @@ public class CartFragment extends BaseFragment {
             mAmount = 0;
             return;
         }
-
         int totalPrice = 0;
         for (Cart cart : listCartCart) {
             totalPrice = totalPrice + cart.getTotalPrice();
         }
-
         String strTotalPrice = totalPrice + Constant.CURRENCY;
         mFragmentCartBinding.tvTotalPrice.setText(strTotalPrice);
         mAmount = totalPrice;
     }
 
     private void deleteFoodFromCart(Cart cart, int position) {
-        new AlertDialog.Builder(getActivity())
-                .setTitle(getString(R.string.confirm_delete_food))
-                .setMessage(getString(R.string.ms_delete_food))
-                .setPositiveButton(getString(R.string.delete), (dialog, which) -> {
+        new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.confirm_delete_food)).setMessage(getString(R.string.ms_delete_food)).setPositiveButton(getString(R.string.delete), (dialog, which) -> {
                     FoodDatabase.getInstance(getActivity()).foodDAO().deleteFood(cart);
                     mListCart.remove(position);
                     mCartAdapter.notifyItemRemoved(position);
-
                     calculateTotalPrice();
-                })
-                .setNegativeButton(getString(R.string.dialog_cancel), (dialog, which) -> dialog.dismiss())
-                .show();
+                }).setNegativeButton(getString(R.string.dialog_cancel), (dialog, which) -> dialog.dismiss()).show();
     }
 
     public void onClickOrderCart() {
         if (getActivity() == null) {
             return;
         }
-
         if (mListCart == null || mListCart.isEmpty()) {
             return;
         }
-
         @SuppressLint("InflateParams") View viewDialog = getLayoutInflater().inflate(R.layout.layout_bottom_sheet_order, null);
-
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity());
         bottomSheetDialog.setContentView(viewDialog);
         bottomSheetDialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
-
-        // init ui
         TextView tvFoodsOrder = viewDialog.findViewById(R.id.tv_foods_order);
         TextView tvPriceOrder = viewDialog.findViewById(R.id.tv_price_order);
         TextView edtNameOrder = viewDialog.findViewById(R.id.edt_name_order);
@@ -190,22 +162,14 @@ public class CartFragment extends BaseFragment {
         TextView edtAddressOrder = viewDialog.findViewById(R.id.edt_address_order);
         TextView tvCancelOrder = viewDialog.findViewById(R.id.tv_cancel_order);
         TextView tvCreateOrder = viewDialog.findViewById(R.id.tv_create_order);
-
-        // Set data
         tvFoodsOrder.setText(getStringListFoodsOrder());
         tvPriceOrder.setText(mFragmentCartBinding.tvTotalPrice.getText().toString());
-
-        // Set listener
         tvCancelOrder.setOnClickListener(v -> bottomSheetDialog.dismiss());
-
         tvCreateOrder.setOnClickListener(v -> {
             String strName = edtNameOrder.getText().toString().trim();
             String strPhone = edtPhoneOrder.getText().toString().trim();
             String strAddress = edtAddressOrder.getText().toString().trim();
-
-//            || StringUtil.isEmpty(strPhone) || StringUtil.isEmpty(strAddress))
             if (StringUtil.isEmpty(strName) || StringUtil.isEmpty(strPhone) || StringUtil.isEmpty(strAddress)) {
-
                 if (StringUtil.isEmpty(strName))  {
                     GlobalFunction.showToastMessage(getActivity(), getString(R.string.ms_full_name_order));
                     return;
@@ -223,20 +187,16 @@ public class CartFragment extends BaseFragment {
                 long id = System.currentTimeMillis();
                 String strEmail = DataStoreManager.getUser().getEmail();
                 Order order = new Order(id, strName, strEmail, strPhone, strAddress,
-                        mAmount, getStringListFoodsOrder(), Constant.TYPE_PAYMENT_CASH, false);
-                ControllerApplication.get(getActivity()).getBookingDatabaseReference()
-                        .child(String.valueOf(id))
-                        .setValue(order, (error1, ref1) -> {
+                        mAmount, getStringListFoodsOrder(), Constant.TYPE_PAYMENT_METHOD, false);
+                ControllerApplication.get(getActivity()).getBookingDatabaseReference().child(String.valueOf(id)).setValue(order, (error1, ref1) -> {
                             GlobalFunction.showToastMessage(getActivity(), getString(R.string.ms_order_success));
                             GlobalFunction.hideSoftKeyboard(getActivity());
                             bottomSheetDialog.dismiss();
-
                             FoodDatabase.getInstance(getActivity()).foodDAO().deleteAllFood();
                             clearCart();
                         });
             }
         });
-
         bottomSheetDialog.show();
     }
 
@@ -247,11 +207,9 @@ public class CartFragment extends BaseFragment {
         String result = "";
         for (Cart cart : mListCart) {
             if (StringUtil.isEmpty(result)) {
-                result = "- " + cart.getName() + " (" + cart.getRealPrice() + Constant.CURRENCY + ") "
-                        + "- " + getString(R.string.quantity) + " " + cart.getCount();
+                result = "- " + cart.getName() + " (" + cart.getRealPrice() + Constant.CURRENCY + ") " + "- " + getString(R.string.quantity) + " " + cart.getCount();
             } else {
-                result = result + "\n" + "- " + cart.getName() + " (" + cart.getRealPrice() + Constant.CURRENCY + ") "
-                        + "- " + getString(R.string.quantity) + " " + cart.getCount();
+                result = result + "\n" + "- " + cart.getName() + " (" + cart.getRealPrice() + Constant.CURRENCY + ") " + "- " + getString(R.string.quantity) + " " + cart.getCount();
             }
         }
         return result;

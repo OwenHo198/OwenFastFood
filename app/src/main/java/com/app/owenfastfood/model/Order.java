@@ -3,7 +3,6 @@ package com.app.owenfastfood.model;
 import java.io.Serializable;
 
 public class Order implements Serializable {
-
     private long id;
     private String name;
     private String email;

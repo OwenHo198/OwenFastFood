@@ -9,15 +9,12 @@ import com.app.owenfastfood.databinding.ActivityForgotPasswordBinding;
 import com.app.owenfastfood.utils.StringUtil;
 
 public class ForgotPasswordActivity extends BaseActivity {
-
     private ActivityForgotPasswordBinding mActivityForgotPasswordBinding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityForgotPasswordBinding = ActivityForgotPasswordBinding.inflate(getLayoutInflater());
         setContentView(mActivityForgotPasswordBinding.getRoot());
-
         mActivityForgotPasswordBinding.imgBack.setOnClickListener(v -> onBackPressed());
         mActivityForgotPasswordBinding.btnResetPassword.setOnClickListener(v -> onClickValidateResetPassword());
     }
@@ -36,9 +33,7 @@ public class ForgotPasswordActivity extends BaseActivity {
     private void resetPassword(String email) {
         showProgressDialog(true);
         FirebaseAuth auth = FirebaseAuth.getInstance();
-
-        auth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(task -> {
+        auth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
                     showProgressDialog(false);
                     if (task.isSuccessful()) {
                         Toast.makeText(ForgotPasswordActivity.this,

@@ -19,7 +19,6 @@ import com.app.owenfastfood.databinding.FragmentAccountBinding;
 import com.app.owenfastfood.prefs.DataStoreManager;
 
 public class    AccountFragment extends BaseFragment {
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

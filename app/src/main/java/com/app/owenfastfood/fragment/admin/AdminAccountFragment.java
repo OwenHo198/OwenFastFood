@@ -20,18 +20,14 @@ import com.app.owenfastfood.fragment.BaseFragment;
 import com.app.owenfastfood.prefs.DataStoreManager;
 
 public class AdminAccountFragment extends BaseFragment {
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentAdminAccountBinding fragmentAdminAccountBinding = FragmentAdminAccountBinding.inflate(inflater, container, false);
-
         fragmentAdminAccountBinding.tvEmail.setText(DataStoreManager.getUser().getEmail());
-
         fragmentAdminAccountBinding.layoutReport.setOnClickListener(v -> onClickReport());
         fragmentAdminAccountBinding.layoutSignOut.setOnClickListener(v -> onClickSignOut());
         fragmentAdminAccountBinding.layoutChangePassword.setOnClickListener(v -> onClickChangePassword());
-
         return fragmentAdminAccountBinding.getRoot();
     }
 

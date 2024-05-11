@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 public class Image implements Serializable {
     private String url;
-
     public Image() {
     }
 

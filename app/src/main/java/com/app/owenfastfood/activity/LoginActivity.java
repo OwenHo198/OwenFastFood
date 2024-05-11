@@ -14,20 +14,15 @@ import com.app.owenfastfood.prefs.DataStoreManager;
 import com.app.owenfastfood.utils.StringUtil;
 
 public class LoginActivity extends BaseActivity {
-
     private ActivityLoginBinding mActivitySignInBinding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivitySignInBinding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(mActivitySignInBinding.getRoot());
-
         mActivitySignInBinding.rdbUser.setChecked(true);
-
         mActivitySignInBinding.layoutSignUp.setOnClickListener(
                 v -> GlobalFunction.startActivity(LoginActivity.this, RegisterActivity.class));
-
         mActivitySignInBinding.btnSignIn.setOnClickListener(v -> onClickValidateSignIn());
         mActivitySignInBinding.tvForgotPassword.setOnClickListener(v -> onClickForgotPassword());
     }
@@ -65,8 +60,7 @@ public class LoginActivity extends BaseActivity {
     private void signInUser(String email, String password) {
         showProgressDialog(true);
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
                     showProgressDialog(false);
                     if (task.isSuccessful()) {
                         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -85,24 +79,3 @@ public class LoginActivity extends BaseActivity {
                 });
     }
 }
-//    private void signInUser(String email, String password) {
-//        showProgressDialog(true);
-//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
-//            showProgressDialog(false);
-//                    if (task.isSuccessful()) {
-//                        FirebaseUser user = firebaseAuth.getCurrentUser();
-//                        if (user != null) {
-//                            User userObject = new User(user.getEmail(), password);
-//                            if (user.getEmail() != null && user.getEmail().contains(Constant.ADMIN_EMAIL_FORMAT)) {
-//                                userObject.setAdmin(true);
-//                            }
-//                            DataStoreManager.setUser(userObject);
-//                            GlobalFunction.gotoMainActivity(this);
-//                            finishAffinity();
-//                        }
-//                    } else {
-//                        Toast.makeText(SignInActivity.this, getString(R.string.ms_sign_in_error), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }

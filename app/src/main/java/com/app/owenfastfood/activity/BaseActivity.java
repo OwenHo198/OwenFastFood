@@ -11,7 +11,6 @@ import com.app.owenfastfood.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected MaterialDialog progressDialog, alertDialog;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,10 +19,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void createProgressDialog() {
-        progressDialog = new MaterialDialog.Builder(this)
-                .content(R.string.waiting_message)
-                .progress(true, 0)
-                .build();
+        progressDialog = new MaterialDialog.Builder(this).content(R.string.waiting_message).progress(true, 0).build();
     }
 
     public void showProgressDialog(boolean value) {
@@ -43,18 +39,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-
         if (alertDialog != null && alertDialog.isShowing()) {
             alertDialog.dismiss();
         }
     }
 
     public void createAlertDialog() {
-        alertDialog = new MaterialDialog.Builder(this)
-                .title(R.string.app_name)
-                .positiveText(R.string.action_ok)
-                .cancelable(false)
-                .build();
+        alertDialog = new MaterialDialog.Builder(this).title(R.string.app_name).positiveText(R.string.action_ok).cancelable(false).build();
     }
 
     public void showAlertDialog(String errorMessage) {
@@ -78,7 +69,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-
         if (alertDialog != null && alertDialog.isShowing()) {
             alertDialog.dismiss();
         }

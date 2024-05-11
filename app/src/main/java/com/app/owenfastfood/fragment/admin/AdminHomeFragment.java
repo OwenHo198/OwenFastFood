@@ -35,16 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminHomeFragment extends BaseFragment {
-
     private FragmentAdminHomeBinding mFragmentAdminHomeBinding;
     private List<Cart> mListCart;
     private AdminFoodAdapter mAdminFoodAdapter;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mFragmentAdminHomeBinding = FragmentAdminHomeBinding.inflate(inflater, container, false);
-
         initView();
         initListener();
         getListFood("");
@@ -70,7 +67,6 @@ public class AdminHomeFragment extends BaseFragment {
             public void onClickUpdateFood(Cart cart) {
                 onClickEditFood(cart);
             }
-
             @Override
             public void onClickDeleteFood(Cart cart) {
                 deleteFoodItem(cart);
@@ -81,9 +77,7 @@ public class AdminHomeFragment extends BaseFragment {
 
     private void initListener() {
         mFragmentAdminHomeBinding.btnAddFood.setOnClickListener(v -> onClickAddFood());
-
         mFragmentAdminHomeBinding.imgSearch.setOnClickListener(view1 -> searchFood());
-
         mFragmentAdminHomeBinding.edtSearchName.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 searchFood();
@@ -96,11 +90,9 @@ public class AdminHomeFragment extends BaseFragment {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 String strKey = s.toString().trim();
@@ -122,10 +114,7 @@ public class AdminHomeFragment extends BaseFragment {
     }
 
     private void deleteFoodItem(Cart cart) {
-        new AlertDialog.Builder(getActivity())
-                .setTitle(getString(R.string.ms_delete_title))
-                .setMessage(getString(R.string.ms_confirm_delete))
-                .setPositiveButton(getString(R.string.action_ok), (dialogInterface, i) -> {
+        new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.ms_delete_title)).setMessage(getString(R.string.ms_confirm_delete)).setPositiveButton(getString(R.string.action_ok), (dialogInterface, i) -> {
                     if (getActivity() == null) {
                         return;
                     }
@@ -133,9 +122,7 @@ public class AdminHomeFragment extends BaseFragment {
                             .child(String.valueOf(cart.getId())).removeValue((error, ref) ->
                             Toast.makeText(getActivity(),
                                     getString(R.string.ms_delete_movie_success), Toast.LENGTH_SHORT).show());
-                })
-                .setNegativeButton(getString(R.string.action_cancel), null)
-                .show();
+                }).setNegativeButton(getString(R.string.action_cancel), null).show();
     }
 
     private void searchFood() {
@@ -154,8 +141,7 @@ public class AdminHomeFragment extends BaseFragment {
             return;
         }
         mListCart.clear();
-        ControllerApplication.get(getActivity()).getFoodDatabaseReference()
-                .addChildEventListener(new ChildEventListener() {
+        ControllerApplication.get(getActivity()).getFoodDatabaseReference().addChildEventListener(new ChildEventListener() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {

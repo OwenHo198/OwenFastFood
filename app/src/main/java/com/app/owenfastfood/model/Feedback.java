@@ -1,7 +1,6 @@
 package com.app.owenfastfood.model;
 
 public class Feedback {
-
     private String name;
     private String phone;
     private String email;

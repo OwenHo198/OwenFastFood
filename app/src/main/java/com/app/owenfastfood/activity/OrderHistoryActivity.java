@@ -20,17 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderHistoryActivity extends BaseActivity {
-
     private ActivityOrderHistoryBinding mActivityOrderHistoryBinding;
     private List<Order> mListOrder;
     private OrderAdapter mOrderAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityOrderHistoryBinding = ActivityOrderHistoryBinding.inflate(getLayoutInflater());
         setContentView(mActivityOrderHistoryBinding.getRoot());
-
         initToolbar();
         initView();
         getListOrders();
@@ -38,9 +35,7 @@ public class OrderHistoryActivity extends BaseActivity {
 
     private void initToolbar() {
         mActivityOrderHistoryBinding.toolbar.imgBack.setVisibility(View.VISIBLE);
-//        mActivityOrderHistoryBinding.toolbar.imgCart.setVisibility(View.GONE);
         mActivityOrderHistoryBinding.toolbar.tvTitle.setText(getString(R.string.order_history));
-
         mActivityOrderHistoryBinding.toolbar.imgBack.setOnClickListener(v -> onBackPressed());
     }
 
@@ -50,8 +45,7 @@ public class OrderHistoryActivity extends BaseActivity {
     }
 
     public void getListOrders() {
-        ControllerApplication.get(this).getBookingDatabaseReference()
-                .addValueEventListener(new ValueEventListener() {
+        ControllerApplication.get(this).getBookingDatabaseReference().addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (mListOrder != null) {
@@ -71,7 +65,6 @@ public class OrderHistoryActivity extends BaseActivity {
                         mOrderAdapter = new OrderAdapter(OrderHistoryActivity.this, mListOrder);
                         mActivityOrderHistoryBinding.rcvOrderHistory.setAdapter(mOrderAdapter);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                     }

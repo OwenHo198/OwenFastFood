@@ -3,7 +3,6 @@ package com.app.owenfastfood.model;
 import com.google.gson.Gson;
 
 public class User {
-
     private String email;
     private String password;
     private boolean isAdmin;

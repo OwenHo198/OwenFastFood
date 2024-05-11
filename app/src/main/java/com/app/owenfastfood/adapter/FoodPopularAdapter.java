@@ -15,10 +15,8 @@ import com.app.owenfastfood.utils.GlideUtils;
 import java.util.List;
 
 public class FoodPopularAdapter extends RecyclerView.Adapter<FoodPopularAdapter.FoodPopularViewHolder> {
-
     private final List<Cart> mListCarts;
     public final IOnClickFoodItemListener iOnClickFoodItemListener;
-
     public FoodPopularAdapter(List<Cart> mListCarts, IOnClickFoodItemListener iOnClickFoodItemListener) {
         this.mListCarts = mListCarts;
         this.iOnClickFoodItemListener = iOnClickFoodItemListener;
@@ -57,9 +55,7 @@ public class FoodPopularAdapter extends RecyclerView.Adapter<FoodPopularAdapter.
     }
 
     public static class FoodPopularViewHolder extends RecyclerView.ViewHolder {
-
         private final ItemFoodPopularBinding mItemFoodPopularBinding;
-
         public FoodPopularViewHolder(@NonNull ItemFoodPopularBinding itemFoodPopularBinding) {
             super(itemFoodPopularBinding.getRoot());
             this.mItemFoodPopularBinding = itemFoodPopularBinding;

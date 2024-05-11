@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateTimeUtils {
-
     private static final String DEFAULT_FORMAT_DATE = "dd-MM-yyyy,hh:mm a";
     private static final String DEFAULT_FORMAT_DATE_2 = "dd/MM/yyyy";
 

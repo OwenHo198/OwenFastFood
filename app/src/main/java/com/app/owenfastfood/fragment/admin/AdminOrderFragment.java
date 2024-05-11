@@ -25,11 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminOrderFragment extends BaseFragment {
-
     private FragmentAdminOrderBinding mFragmentAdminOrderBinding;
     private List<Order> mListOrder;
     private AdminOrderAdapter mAdminOrderAdapter;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -63,8 +61,7 @@ public class AdminOrderFragment extends BaseFragment {
         if (getActivity() == null) {
             return;
         }
-        ControllerApplication.get(getActivity()).getBookingDatabaseReference()
-                .addChildEventListener(new ChildEventListener() {
+        ControllerApplication.get(getActivity()).getBookingDatabaseReference().addChildEventListener(new ChildEventListener() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
@@ -75,7 +72,6 @@ public class AdminOrderFragment extends BaseFragment {
                         mListOrder.add(0, order);
                         mAdminOrderAdapter.notifyDataSetChanged();
                     }
-
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
@@ -92,7 +88,6 @@ public class AdminOrderFragment extends BaseFragment {
                         }
                         mAdminOrderAdapter.notifyDataSetChanged();
                     }
-
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
@@ -109,11 +104,9 @@ public class AdminOrderFragment extends BaseFragment {
                         }
                         mAdminOrderAdapter.notifyDataSetChanged();
                     }
-
                     @Override
                     public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                     }
@@ -124,8 +117,7 @@ public class AdminOrderFragment extends BaseFragment {
         if (getActivity() == null) {
             return;
         }
-        ControllerApplication.get(getActivity()).getBookingDatabaseReference()
-                .child(String.valueOf(order.getId())).child("completed").setValue(!order.isCompleted());
+        ControllerApplication.get(getActivity()).getBookingDatabaseReference().child(String.valueOf(order.getId())).child("completed").setValue(!order.isCompleted());
     }
 
     @Override

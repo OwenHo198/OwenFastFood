@@ -18,16 +18,12 @@ import com.app.owenfastfood.prefs.DataStoreManager;
 import com.app.owenfastfood.utils.StringUtil;
 
 public class RegisterActivity extends BaseActivity {
-
     private ActivityRegisterBinding mActivitySignUpBinding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivitySignUpBinding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(mActivitySignUpBinding.getRoot());
-
-
         mActivitySignUpBinding.imgBack.setOnClickListener(v -> onBackPressed());
         mActivitySignUpBinding.layoutSignIn.setOnClickListener(v -> finish());
         mActivitySignUpBinding.btnSignUp.setOnClickListener(v -> onClickValidateSignUp());
@@ -43,15 +39,6 @@ public class RegisterActivity extends BaseActivity {
         } else if (!StringUtil.isValidEmail(strEmail)) {
             Toast.makeText(RegisterActivity.this, getString(R.string.ms_email_invalid), Toast.LENGTH_SHORT).show();
         } else {
-//            if (mActivitySignUpBinding.rdbAdmin.isChecked()) {
-//                if (!strEmail.contains(Constant.ADMIN_EMAIL_FORMAT)) {
-//                    Toast.makeText(SignUpActivity.this, getString(R.string.ms_email_invalid_admin), Toast.LENGTH_SHORT).show();
-//                } else {
-//                    signUpUser(strEmail, strPassword);
-//                }
-//                return;
-//            }
-
             if (strEmail.contains(Constant.ADMIN_EMAIL_FORMAT)) {
                 Toast.makeText(RegisterActivity.this, getString(R.string.ms_email_invalid_user), Toast.LENGTH_SHORT).show();
             } else {
@@ -59,34 +46,13 @@ public class RegisterActivity extends BaseActivity {
             }
         }
     }
-//    private void signUpUser(String email, String password) {showProgressDialog(true);
-//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {showProgressDialog(false);
-//                    if (task.isSuccessful()) {
-//                        FirebaseUser user = firebaseAuth.getCurrentUser();
-//                        if (user != null) {
-//                            User userObject = new User(user.getEmail(), password);
-//                            if (user.getEmail() != null && user.getEmail().contains(Constant.ADMIN_EMAIL_FORMAT)) {
-//                                userObject.setAdmin(true);
-//                            }
-//                            DataStoreManager.setUser(userObject);
-//                            GlobalFunction.gotoSignInActivity(this);
-//                            Toast.makeText(SignUpActivity.this, getString(R.string.ms_sign_up_success), Toast.LENGTH_SHORT).show();
-//                            finishAffinity();
-//                        }
-//                    } else {
-//                        Toast.makeText(SignUpActivity.this, getString(R.string.ms_sign_up_error),
-//                                Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
+
     private void signUpUser(String email, String password) {
         showProgressDialog(true);
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {showProgressDialog(false);
                     if (task.isSuccessful()) {
                         FirebaseUser user = firebaseAuth.getCurrentUser();
-
                         firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

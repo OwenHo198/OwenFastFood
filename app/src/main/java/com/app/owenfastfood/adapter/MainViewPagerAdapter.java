@@ -12,11 +12,9 @@ import com.app.owenfastfood.fragment.FeedbackFragment;
 import com.app.owenfastfood.fragment.HomeFragment;
 
 public class MainViewPagerAdapter extends FragmentStateAdapter {
-
     public MainViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
-
     @NonNull
     @Override
     public Fragment createFragment(int position) {
@@ -30,7 +28,7 @@ public class MainViewPagerAdapter extends FragmentStateAdapter {
             case 2:
                 return new FeedbackFragment();
 
-            case 4:
+            case 3:
                 return new AccountFragment();
 
             default:
@@ -40,6 +38,6 @@ public class MainViewPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 4;
     }
 }

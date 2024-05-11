@@ -9,7 +9,6 @@ import java.util.List;
 
 @Entity(tableName = "cart")
 public class Cart implements Serializable {
-
     @PrimaryKey(autoGenerate = true)
     private long id;
     private String idacc;

@@ -11,19 +11,15 @@ import com.app.owenfastfood.adapter.MainViewPagerAdapter;
 import com.app.owenfastfood.databinding.ActivityMainBinding;
 
 public class MainActivity extends BaseActivity {
-
     private ActivityMainBinding mActivityMainBinding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mActivityMainBinding.getRoot());
-
         mActivityMainBinding.viewpager2.setUserInputEnabled(false);
         MainViewPagerAdapter mainViewPagerAdapter = new MainViewPagerAdapter(this);
         mActivityMainBinding.viewpager2.setAdapter(mainViewPagerAdapter);
-
         mActivityMainBinding.viewpager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -32,7 +28,6 @@ public class MainActivity extends BaseActivity {
                     case 0:
                         mActivityMainBinding.bottomNavigation.getMenu().findItem(R.id.nav_home).setChecked(true);
                         break;
-
                     case 1:
                         mActivityMainBinding.bottomNavigation.getMenu().findItem(R.id.nav_cart).setChecked(true);
                         break;
@@ -40,11 +35,6 @@ public class MainActivity extends BaseActivity {
                     case 2:
                         mActivityMainBinding.bottomNavigation.getMenu().findItem(R.id.nav_feedback).setChecked(true);
                         break;
-
-//                    case 3:
-//                        mActivityMainBinding.bottomNavigation.getMenu().findItem(R.id.nav_contact).setChecked(true);
-//                        break;
-
                     case 4:
                         mActivityMainBinding.bottomNavigation.getMenu().findItem(R.id.nav_account).setChecked(true);
                         break;
@@ -61,9 +51,6 @@ public class MainActivity extends BaseActivity {
             } else if (id == R.id.nav_feedback) {
                 mActivityMainBinding.viewpager2.setCurrentItem(2);
             }
-//            else if (id == R.id.nav_contact) {
-//                mActivityMainBinding.viewpager2.setCurrentItem(3);
-//            }
             else if (id == R.id.nav_account) {
                 mActivityMainBinding.viewpager2.setCurrentItem(4);
             }
@@ -75,7 +62,6 @@ public class MainActivity extends BaseActivity {
     public void onBackPressed() {
         showConfirmExitApp();
     }
-
     private void showConfirmExitApp() {
         new MaterialDialog.Builder(this)
                 .title(getString(R.string.app_name))

@@ -21,7 +21,6 @@ import java.util.Calendar;
 import java.util.regex.Pattern;
 
 public class GlobalFunction {
-
     public static void startActivity(Context context, Class<?> clz) {
         Intent intent = new Intent(context, clz);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -46,7 +45,7 @@ public class GlobalFunction {
         GlobalFunction.startActivity(context, MainActivity.class);
     }
     public static void gotoSignInActivity(Context context) {
-            GlobalFunction.startActivity(context, LoginActivity.class);
+        GlobalFunction.startActivity(context, LoginActivity.class);
     }
 
     public static void hideSoftKeyboard(Activity activity) {
@@ -58,20 +57,6 @@ public class GlobalFunction {
             ex.printStackTrace();
         }
     }
-
-
-//    public static void callPhoneNumber(Activity activity) {
-//        try {
-//            if (Build.VERSION.SDK_INT > 22) {
-//                if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-//                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CALL_PHONE}, 101);
-//                    return;
-//                }
-//            }
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
 
     public static void showToastMessage(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
@@ -89,7 +74,6 @@ public class GlobalFunction {
         int currentMonth = mCalendar.get(Calendar.MONTH);
         int currentYear = mCalendar.get(Calendar.YEAR);
         mCalendar.set(currentYear, currentMonth, currentDay);
-
         if (!StringUtil.isEmpty(currentDate)) {
             String[] split = currentDate.split("/");
             currentDay = Integer.parseInt(split[0]);
@@ -99,13 +83,10 @@ public class GlobalFunction {
         }
 
         DatePickerDialog.OnDateSetListener callBack = (view, year, monthOfYear, dayOfMonth) -> {
-            String date = StringUtil.getDoubleNumber(dayOfMonth) +
-                    "/" + StringUtil.getDoubleNumber(monthOfYear + 1) +
-                    "/" + year;
+            String date = StringUtil.getDoubleNumber(dayOfMonth) + "/" + StringUtil.getDoubleNumber(monthOfYear + 1) + "/" + year;
             getDateListener.getDate(date);
         };
-        DatePickerDialog datePicker = new DatePickerDialog(context, callBack, mCalendar.get(Calendar.YEAR),
-                mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DATE));
+        DatePickerDialog datePicker = new DatePickerDialog(context, callBack, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DATE));
         datePicker.show();
     }
 }

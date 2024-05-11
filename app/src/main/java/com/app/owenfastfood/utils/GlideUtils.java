@@ -6,7 +6,6 @@ import com.bumptech.glide.Glide;
 import com.app.owenfastfood.R;
 
 public class GlideUtils {
-
     public static void loadUrlBanner(String url, ImageView imageView) {
         if (StringUtil.isEmpty(url)) {
             imageView.setImageResource(R.drawable.img_no_image);

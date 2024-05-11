@@ -16,10 +16,8 @@ import com.app.owenfastfood.utils.DateTimeUtils;
 import java.util.List;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
-
     private Context mContext;
     private final List<Order> mListOrder;
-
     public OrderAdapter(Context mContext, List<Order> mListOrder) {
         this.mContext = mContext;
         this.mListOrder = mListOrder;
@@ -50,10 +48,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.mItemOrderBinding.tvAddress.setText(order.getAddress());
         holder.mItemOrderBinding.tvMenu.setText(order.getFoods());
         holder.mItemOrderBinding.tvDate.setText(DateTimeUtils.convertTimeStampToDate(order.getId()));
-
         String strAmount = order.getAmount() + Constant.CURRENCY;
         holder.mItemOrderBinding.tvTotalAmount.setText(strAmount);
-
         String paymentMethod = "";
         if (Constant.TYPE_PAYMENT_METHOD == order.getPayment()) {
             paymentMethod = Constant.PAYMENT_METHOD;
@@ -72,11 +68,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void release() {
         mContext = null;
     }
-
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-
         private final ItemOrderBinding mItemOrderBinding;
-
         public OrderViewHolder(@NonNull ItemOrderBinding itemOrderBinding) {
             super(itemOrderBinding.getRoot());
             this.mItemOrderBinding = itemOrderBinding;

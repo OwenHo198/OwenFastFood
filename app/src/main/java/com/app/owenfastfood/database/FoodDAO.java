@@ -12,23 +12,18 @@ import java.util.List;
 
 @Dao
 public interface FoodDAO {
-
     @Insert
     void insertFood(Cart cart);
     @Query("SELECT * FROM Cart WHERE idacc=:idacc")
     List<Cart> getListFoodCartByUser(String idacc);
     @Query("SELECT * FROM Cart")
     List<Cart> getListFoodCart();
-
     @Query("SELECT * FROM Cart WHERE id=:id")
     List<Cart> checkFoodInCart(long id);
-
     @Delete
     void deleteFood(Cart cart);
-
     @Update
     void updateFood(Cart cart);
-
     @Query("DELETE from Cart")
     void deleteAllFood();
 }

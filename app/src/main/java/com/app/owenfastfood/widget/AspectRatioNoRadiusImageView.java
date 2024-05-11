@@ -10,7 +10,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 import com.app.owenfastfood.R;
 
 public class AspectRatioNoRadiusImageView extends AppCompatImageView {
-
     public static final int MEASUREMENT_WIDTH = 0;
     public static final int MEASUREMENT_HEIGHT = 1;
 
@@ -61,7 +60,6 @@ public class AspectRatioNoRadiusImageView extends AppCompatImageView {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if (!aspectRatioEnabled) return;
-
         int newWidth;
         int newHeight;
         switch (dominantMeasurement) {
@@ -69,23 +67,18 @@ public class AspectRatioNoRadiusImageView extends AppCompatImageView {
                 newWidth = getMeasuredWidth();
                 newHeight = (int) (newWidth * aspectRatio);
                 break;
-
             case MEASUREMENT_HEIGHT:
                 newHeight = getMeasuredHeight();
                 newWidth = (int) (newHeight * aspectRatio);
                 break;
-
             default:
                 throw new IllegalStateException("Unknown Measurement With ID " + dominantMeasurement);
         }
-
         setMeasuredDimension(newWidth, newHeight);
     }
-
     public float getAspectRatio() {
         return aspectRatio;
     }
-
     public void setAspectRatio(float aspectRatio) {
         this.aspectRatio = aspectRatio;
         if (aspectRatioEnabled) {
@@ -96,16 +89,13 @@ public class AspectRatioNoRadiusImageView extends AppCompatImageView {
     public boolean getAspectRatioEnabled() {
         return aspectRatioEnabled;
     }
-
     public void setAspectRatioEnabled(boolean aspectRatioEnabled) {
         this.aspectRatioEnabled = aspectRatioEnabled;
         requestLayout();
     }
-
     public int getDominantMeasurement() {
         return dominantMeasurement;
     }
-
     public void setDominantMeasurement(int dominantMeasurement) {
         if (dominantMeasurement != MEASUREMENT_HEIGHT && dominantMeasurement != MEASUREMENT_WIDTH) {
             throw new IllegalArgumentException("Invalid measurement type.");

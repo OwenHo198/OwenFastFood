@@ -26,15 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminReportActivity extends AppCompatActivity {
-
     private ActivityAdminReportBinding mActivityAdminReportBinding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityAdminReportBinding = ActivityAdminReportBinding.inflate(getLayoutInflater());
         setContentView(mActivityAdminReportBinding.getRoot());
-
         initToolbar();
         initListener();
         getListRevenue();
@@ -42,9 +39,7 @@ public class AdminReportActivity extends AppCompatActivity {
 
     private void initToolbar() {
         mActivityAdminReportBinding.toolbar.imgBack.setVisibility(View.VISIBLE);
-//        mActivityAdminReportBinding.toolbar.imgCart.setVisibility(View.GONE);
         mActivityAdminReportBinding.toolbar.tvTitle.setText(getString(R.string.revenue));
-
         mActivityAdminReportBinding.toolbar.imgBack.setOnClickListener(v -> onBackPressed());
     }
 
@@ -85,7 +80,6 @@ public class AdminReportActivity extends AppCompatActivity {
                 }
                 handleDataHistories(list);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -128,8 +122,6 @@ public class AdminReportActivity extends AppCompatActivity {
         mActivityAdminReportBinding.rcvOrderHistory.setLayoutManager(linearLayoutManager);
         RevenueAdapter revenueAdapter = new RevenueAdapter(list);
         mActivityAdminReportBinding.rcvOrderHistory.setAdapter(revenueAdapter);
-
-        // Calculate total
         String strTotalValue = getTotalValues(list) + Constant.CURRENCY;
         mActivityAdminReportBinding.tvTotalValue.setText(strTotalValue);
     }
@@ -138,7 +130,6 @@ public class AdminReportActivity extends AppCompatActivity {
         if (list == null || list.isEmpty()) {
             return 0;
         }
-
         int total = 0;
         for (Order order : list) {
             total += order.getAmount();

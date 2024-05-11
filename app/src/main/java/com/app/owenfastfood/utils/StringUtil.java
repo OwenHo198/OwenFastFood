@@ -1,7 +1,6 @@
 package com.app.owenfastfood.utils;
 
 public class StringUtil {
-
     public static boolean isValidEmail(CharSequence target) {
         if (target == null)
             return false;

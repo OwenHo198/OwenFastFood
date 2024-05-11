@@ -6,7 +6,5 @@ public interface Constant {
     int TYPE_PAYMENT_METHOD = 1;
     String PAYMENT_METHOD = "Cash";
     String ADMIN_EMAIL_FORMAT = "gocvietgamer@gmail.com";
-
-    // Key Intent
     String KEY_INTENT_FOOD_OBJECT = "food_object";
 }

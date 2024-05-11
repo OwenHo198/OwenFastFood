@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.List;
 
 public class FoodObject implements Serializable {
-
     private long id;
     private String name;
     private String description;

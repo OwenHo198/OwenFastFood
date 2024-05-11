@@ -12,16 +12,13 @@ import com.app.owenfastfood.prefs.DataStoreManager;
 import com.app.owenfastfood.utils.StringUtil;
 
 @SuppressLint("CustomSplashScreen")
-public class IntroActivity extends BaseActivity {
-
+public class LoadingActivity extends BaseActivity {
     private ActivityIntroBinding mActivitySplashBinding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivitySplashBinding = ActivityIntroBinding.inflate(getLayoutInflater());
         setContentView(mActivitySplashBinding.getRoot());
-
         initUi();
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(this::goToNextActivity, 2000);

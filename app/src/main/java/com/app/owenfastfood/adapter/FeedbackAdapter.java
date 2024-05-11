@@ -12,13 +12,10 @@ import com.app.owenfastfood.model.Feedback;
 import java.util.List;
 
 public class FeedbackAdapter extends RecyclerView.Adapter<FeedbackAdapter.FeedbackViewHolder> {
-
     private final List<Feedback> mListFeedback;
-
     public FeedbackAdapter(List<Feedback> mListFeedback) {
         this.mListFeedback = mListFeedback;
     }
-
     @NonNull
     @Override
     public FeedbackViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,9 +43,7 @@ public class FeedbackAdapter extends RecyclerView.Adapter<FeedbackAdapter.Feedba
     }
 
     public static class FeedbackViewHolder extends RecyclerView.ViewHolder {
-
         private final ItemFeedbackBinding mItemFeedbackBinding;
-
         public FeedbackViewHolder(@NonNull ItemFeedbackBinding itemFeedbackBinding) {
             super(itemFeedbackBinding.getRoot());
             this.mItemFeedbackBinding = itemFeedbackBinding;

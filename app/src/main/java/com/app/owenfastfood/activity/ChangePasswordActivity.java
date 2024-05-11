@@ -13,15 +13,12 @@ import com.app.owenfastfood.prefs.DataStoreManager;
 import com.app.owenfastfood.utils.StringUtil;
 
 public class ChangePasswordActivity extends BaseActivity {
-
     private ActivityChangePasswordBinding mActivityChangePasswordBinding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityChangePasswordBinding = ActivityChangePasswordBinding.inflate(getLayoutInflater());
         setContentView(mActivityChangePasswordBinding.getRoot());
-
         mActivityChangePasswordBinding.imgBack.setOnClickListener(v -> onBackPressed());
         mActivityChangePasswordBinding.btnChangePassword.setOnClickListener(v -> onClickValidateChangePassword());
     }
@@ -53,8 +50,7 @@ public class ChangePasswordActivity extends BaseActivity {
         if (user == null) {
             return;
         }
-        user.updatePassword(newPassword)
-                .addOnCompleteListener(task -> {
+        user.updatePassword(newPassword).addOnCompleteListener(task -> {
                     showProgressDialog(false);
                     if (task.isSuccessful()) {
                         Toast.makeText(ChangePasswordActivity.this,

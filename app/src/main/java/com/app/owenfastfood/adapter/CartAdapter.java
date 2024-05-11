@@ -14,13 +14,10 @@ import com.app.owenfastfood.utils.GlideUtils;
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
-
     private final List<Cart> mListCarts;
     private final IClickListener iClickListener;
-
     public interface IClickListener {
         void clickDeteteFood(Cart cart, int position);
-
         void updateItemFood(Cart cart, int position);
     }
 
@@ -44,15 +41,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
         GlideUtils.loadUrl(cart.getImage(), holder.mItemCartBinding.imgFoodCart);
         holder.mItemCartBinding.tvFoodNameCart.setText(cart.getName());
-
-
         String strFoodPriceCart = cart.getPrice() + Constant.CURRENCY;
         if (cart.getSale() > 0) {
             strFoodPriceCart = cart.getRealPrice() + Constant.CURRENCY;
         }
         holder.mItemCartBinding.tvFoodPriceCart.setText(strFoodPriceCart);
         holder.mItemCartBinding.tvCount.setText(String.valueOf(cart.getCount()));
-
         holder.mItemCartBinding.tvSubtract.setOnClickListener(v -> {
             String strCount = holder.mItemCartBinding.tvCount.getText().toString();
             int count = Integer.parseInt(strCount);
@@ -65,18 +59,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             int totalPrice = cart.getRealPrice() * newCount;
             cart.setCount(newCount);
             cart.setTotalPrice(totalPrice);
-
             iClickListener.updateItemFood(cart, holder.getAdapterPosition());
         });
 
         holder.mItemCartBinding.tvAdd.setOnClickListener(v -> {
             int newCount = Integer.parseInt(holder.mItemCartBinding.tvCount.getText().toString()) + 1;
             holder.mItemCartBinding.tvCount.setText(String.valueOf(newCount));
-
             int totalPrice = cart.getRealPrice() * newCount;
             cart.setCount(newCount);
             cart.setTotalPrice(totalPrice);
-
             iClickListener.updateItemFood(cart, holder.getAdapterPosition());
         });
 
@@ -88,11 +79,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public int getItemCount() {
         return null == mListCarts ? 0 : mListCarts.size();
     }
-
     public static class CartViewHolder extends RecyclerView.ViewHolder {
-
         private final ItemCartBinding mItemCartBinding;
-
         public CartViewHolder(ItemCartBinding itemCartBinding) {
             super(itemCartBinding.getRoot());
             this.mItemCartBinding = itemCartBinding;

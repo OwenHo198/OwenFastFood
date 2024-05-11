@@ -17,10 +17,8 @@ import com.app.owenfastfood.utils.GlideUtils;
 import java.util.List;
 
 public class FoodGridAdapter extends RecyclerView.Adapter<FoodGridAdapter.FoodGridViewHolder> {
-
     private final List<Cart> mListCarts;
     public final IOnClickFoodItemListener iOnClickFoodItemListener;
-
     public FoodGridAdapter(List<Cart> mListCarts, IOnClickFoodItemListener iOnClickFoodItemListener) {
         this.mListCarts = mListCarts;
         this.iOnClickFoodItemListener = iOnClickFoodItemListener;
@@ -43,25 +41,20 @@ public class FoodGridAdapter extends RecyclerView.Adapter<FoodGridAdapter.FoodGr
         if (cart.getSale() <= 0) {
             holder.mItemFoodGridBinding.tvSaleOff.setVisibility(View.GONE);
             holder.mItemFoodGridBinding.tvPrice.setVisibility(View.GONE);
-
             String strPrice = cart.getPrice() + Constant.CURRENCY;
             holder.mItemFoodGridBinding.tvPriceSale.setText(strPrice);
         } else {
             holder.mItemFoodGridBinding.tvSaleOff.setVisibility(View.VISIBLE);
             holder.mItemFoodGridBinding.tvPrice.setVisibility(View.VISIBLE);
-
             String strSale = "Discount " + cart.getSale() + "%";
             holder.mItemFoodGridBinding.tvSaleOff.setText(strSale);
-
             String strOldPrice = cart.getPrice() + Constant.CURRENCY;
             holder.mItemFoodGridBinding.tvPrice.setText(strOldPrice);
             holder.mItemFoodGridBinding.tvPrice.setPaintFlags(holder.mItemFoodGridBinding.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
             String strRealPrice = cart.getRealPrice() + Constant.CURRENCY;
             holder.mItemFoodGridBinding.tvPriceSale.setText(strRealPrice);
         }
         holder.mItemFoodGridBinding.tvFoodName.setText(cart.getName());
-
         holder.mItemFoodGridBinding.layoutItem.setOnClickListener(v -> iOnClickFoodItemListener.onClickItemFood(cart));
     }
 
@@ -69,11 +62,8 @@ public class FoodGridAdapter extends RecyclerView.Adapter<FoodGridAdapter.FoodGr
     public int getItemCount() {
         return null == mListCarts ? 0 : mListCarts.size();
     }
-
     public static class FoodGridViewHolder extends RecyclerView.ViewHolder {
-
         private final ItemFoodGridBinding mItemFoodGridBinding;
-
         public FoodGridViewHolder(ItemFoodGridBinding itemFoodGridBinding) {
             super(itemFoodGridBinding.getRoot());
             this.mItemFoodGridBinding = itemFoodGridBinding;

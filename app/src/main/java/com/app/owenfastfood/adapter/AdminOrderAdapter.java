@@ -16,11 +16,9 @@ import com.app.owenfastfood.utils.DateTimeUtils;
 import java.util.List;
 
 public class AdminOrderAdapter extends RecyclerView.Adapter<AdminOrderAdapter.AdminOrderViewHolder> {
-
     private Context mContext;
     private final List<Order> mListOrder;
     private final IUpdateStatusListener mIUpdateStatusListener;
-
     public interface IUpdateStatusListener {
         void updateStatus(Order order);
     }
@@ -58,13 +56,11 @@ public class AdminOrderAdapter extends RecyclerView.Adapter<AdminOrderAdapter.Ad
         holder.mItemAdminOrderBinding.tvAddress.setText(order.getAddress());
         holder.mItemAdminOrderBinding.tvMenu.setText(order.getFoods());
         holder.mItemAdminOrderBinding.tvDate.setText(DateTimeUtils.convertTimeStampToDate(order.getId()));
-
         String strAmount = order.getAmount() + Constant.CURRENCY;
         holder.mItemAdminOrderBinding.tvTotalAmount.setText(strAmount);
-
         String paymentMethod = "";
-        if (Constant.TYPE_PAYMENT_CASH == order.getPayment()) {
-            paymentMethod = Constant.PAYMENT_METHOD_CASH;
+        if (Constant.TYPE_PAYMENT_METHOD == order.getPayment()) {
+            paymentMethod = Constant.PAYMENT_METHOD;
         }
         holder.mItemAdminOrderBinding.tvPayment.setText(paymentMethod);
         holder.mItemAdminOrderBinding.chbStatus.setOnClickListener(
@@ -82,11 +78,8 @@ public class AdminOrderAdapter extends RecyclerView.Adapter<AdminOrderAdapter.Ad
     public void release() {
         mContext = null;
     }
-
     public static class AdminOrderViewHolder extends RecyclerView.ViewHolder {
-
         private final ItemAdminOrderBinding mItemAdminOrderBinding;
-
         public AdminOrderViewHolder(@NonNull ItemAdminOrderBinding itemAdminOrderBinding) {
             super(itemAdminOrderBinding.getRoot());
             this.mItemAdminOrderBinding = itemAdminOrderBinding;
