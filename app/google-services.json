@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "890135704097",
+    "firebase_url": "https://owenfastfood-224d1-default-rtdb.firebaseio.com",
+    "project_id": "owenfastfood-224d1",
+    "storage_bucket": "owenfastfood-224d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890135704097:android:9d8f48a72d37f47a746960",
+        "android_client_info": {
+          "package_name": "com.app.owenfastfood"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2D5utSUHAJaQYxmJtFI9PXdOYuRSS7IE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
