@@ -41,6 +41,7 @@ public class CartFragment extends BaseFragment {
     private FragmentCartBinding mFragmentCartBinding;
     private CartAdapter mCartAdapter;
     private List<Cart> mListCart;
+    private Cart mCart;
     private int mAmount;
     @Nullable
     @Override
@@ -66,8 +67,8 @@ public class CartFragment extends BaseFragment {
             return;
         }
         if (isUserLoggedIn()) {
-            String currentUser = getCurrentUser();
-            mListCart = FoodDatabase.getInstance(getActivity()).foodDAO().getListFoodCartByUser(currentUser);
+            String current_user_id = getCurrentUserId();
+            mListCart = FoodDatabase.getInstance(getActivity()).cartDAO().getListFoodCartByUser(current_user_id);
             initRecyclerView();
         }
     }
@@ -77,7 +78,7 @@ public class CartFragment extends BaseFragment {
         return user != null;
     }
 
-    private String getCurrentUser() {
+    private String getCurrentUserId() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             return user.getUid();
@@ -99,7 +100,7 @@ public class CartFragment extends BaseFragment {
                 }
                 @Override
                 public void updateItemFood(Cart cart, int position) {
-                    FoodDatabase.getInstance(getActivity()).foodDAO().updateFood(cart);
+                    FoodDatabase.getInstance(getActivity()).cartDAO().updateFood(cart);
                     mCartAdapter.notifyItemChanged(position);
                     calculateTotalPrice();
                 }
@@ -119,7 +120,8 @@ public class CartFragment extends BaseFragment {
     }
 
     private void calculateTotalPrice() {
-        List<Cart> listCartCart = FoodDatabase.getInstance(getActivity()).foodDAO().getListFoodCart();
+        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        List<Cart> listCartCart = FoodDatabase.getInstance(getActivity()).cartDAO().getListFoodCartByUser(user_id);
         if (listCartCart == null || listCartCart.isEmpty()) {
             String strZero = 0 + Constant.CURRENCY;
             mFragmentCartBinding.tvTotalPrice.setText(strZero);
@@ -128,7 +130,7 @@ public class CartFragment extends BaseFragment {
         }
         int totalPrice = 0;
         for (Cart cart : listCartCart) {
-            totalPrice = totalPrice + cart.getTotalPrice();
+            totalPrice = totalPrice + cart.getRealPrice();
         }
         String strTotalPrice = totalPrice + Constant.CURRENCY;
         mFragmentCartBinding.tvTotalPrice.setText(strTotalPrice);
@@ -137,7 +139,7 @@ public class CartFragment extends BaseFragment {
 
     private void deleteFoodFromCart(Cart cart, int position) {
         new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.confirm_delete_food)).setMessage(getString(R.string.ms_delete_food)).setPositiveButton(getString(R.string.delete), (dialog, which) -> {
-                    FoodDatabase.getInstance(getActivity()).foodDAO().deleteFood(cart);
+                    FoodDatabase.getInstance(getActivity()).cartDAO().deleteFood(cart);
                     mListCart.remove(position);
                     mCartAdapter.notifyItemRemoved(position);
                     calculateTotalPrice();
@@ -192,7 +194,7 @@ public class CartFragment extends BaseFragment {
                             GlobalFunction.showToastMessage(getActivity(), getString(R.string.ms_order_success));
                             GlobalFunction.hideSoftKeyboard(getActivity());
                             bottomSheetDialog.dismiss();
-                            FoodDatabase.getInstance(getActivity()).foodDAO().deleteAllFood();
+                            FoodDatabase.getInstance(getActivity()).cartDAO().deleteAllFood();
                             clearCart();
                         });
             }
@@ -207,9 +209,9 @@ public class CartFragment extends BaseFragment {
         String result = "";
         for (Cart cart : mListCart) {
             if (StringUtil.isEmpty(result)) {
-                result = "- " + cart.getName() + " (" + cart.getRealPrice() + Constant.CURRENCY + ") " + "- " + getString(R.string.quantity) + " " + cart.getCount();
+                result = "- " + cart.food_name + " (" + cart.getRealPrice() + Constant.CURRENCY + ") " + "- " + getString(R.string.quantity) + " " + cart.quantity;
             } else {
-                result = result + "\n" + "- " + cart.getName() + " (" + cart.getRealPrice() + Constant.CURRENCY + ") " + "- " + getString(R.string.quantity) + " " + cart.getCount();
+                result = result + "\n" + "- " + cart.food_name + " (" + cart.getRealPrice() + Constant.CURRENCY + ") " + "- " + getString(R.string.quantity) + " " + cart.quantity;
             }
         }
         return result;

@@ -11,15 +11,15 @@ import com.app.owenfastfood.model.Cart;
 import java.util.List;
 
 @Dao
-public interface FoodDAO {
+public interface CartDAO {
+    @Query("SELECT * FROM Cart WHERE food_id=:food_id AND user_id = :user_id")
+    Cart findCartByFoodId(String user_id, long food_id);
     @Insert
     void insertFood(Cart cart);
-    @Query("SELECT * FROM Cart WHERE idacc=:idacc")
-    List<Cart> getListFoodCartByUser(String idacc);
+    @Query("SELECT * FROM Cart WHERE user_id=:user_id")
+    List<Cart> getListFoodCartByUser( String user_id);
     @Query("SELECT * FROM Cart")
     List<Cart> getListFoodCart();
-    @Query("SELECT * FROM Cart WHERE id=:id")
-    List<Cart> checkFoodInCart(long id);
     @Delete
     void deleteFood(Cart cart);
     @Update

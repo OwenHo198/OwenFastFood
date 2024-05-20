@@ -30,7 +30,7 @@ public class AddAndEditFoodActivity extends BaseActivity {
     private Uri selectedImageUri;
     private ActivityAddFoodBinding mActivityAddFoodBinding;
     private boolean isUpdate;
-    private Cart mCart;
+    private FoodObject food;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class AddAndEditFoodActivity extends BaseActivity {
         Bundle bundleReceived = getIntent().getExtras();
         if (bundleReceived != null) {
             isUpdate = true;
-            mCart = (Cart) bundleReceived.get(Constant.KEY_INTENT_FOOD_OBJECT);
+            food = (FoodObject) bundleReceived.get(Constant.KEY_INTENT_FOOD_OBJECT);
         }
     }
 
@@ -82,11 +82,11 @@ public class AddAndEditFoodActivity extends BaseActivity {
         if (isUpdate) {
             mActivityAddFoodBinding.toolbar.tvTitle.setText(getString(R.string.edit_food));
             mActivityAddFoodBinding.btnAddOrEdit.setText(getString(R.string.action_edit));
-            mActivityAddFoodBinding.edtName.setText(mCart.getName());
-            mActivityAddFoodBinding.edtDescription.setText(mCart.getDescription());
-            mActivityAddFoodBinding.edtPrice.setText(String.valueOf(mCart.getPrice()));
-            mActivityAddFoodBinding.edtDiscount.setText(String.valueOf(mCart.getSale()));
-            mActivityAddFoodBinding.chbPopular.setChecked(mCart.isPopular());
+            mActivityAddFoodBinding.edtName.setText(food.getName());
+            mActivityAddFoodBinding.edtDescription.setText(food.getDescription());
+            mActivityAddFoodBinding.edtPrice.setText(String.valueOf(food.getPrice()));
+            mActivityAddFoodBinding.edtDiscount.setText(String.valueOf(food.getSale()));
+            mActivityAddFoodBinding.chbPopular.setChecked(food.isPopular());
         } else {
             mActivityAddFoodBinding.toolbar.tvTitle.setText(getString(R.string.add_food));
             mActivityAddFoodBinding.btnAddOrEdit.setText(getString(R.string.action_add));
@@ -102,6 +102,7 @@ public class AddAndEditFoodActivity extends BaseActivity {
         String strPrice = mActivityAddFoodBinding.edtPrice.getText().toString().trim();
         String strDiscount = mActivityAddFoodBinding.edtDiscount.getText().toString().trim();
         boolean isPopular = mActivityAddFoodBinding.chbPopular.isChecked();
+
         if (StringUtil.isEmpty(strName) || StringUtil.isEmpty(strDescription) ||
                 StringUtil.isEmpty(strPrice) || StringUtil.isEmpty(strDiscount)) {
             if (StringUtil.isEmpty(strName)) {
@@ -121,7 +122,9 @@ public class AddAndEditFoodActivity extends BaseActivity {
                 return;
             }
         }
+
         boolean isNewImageSelected = (selectedImageUri != null);
+
         if (isUpdate) {
             Map<String, Object> updateMap = new HashMap<>();
             updateMap.put("name", strName);
@@ -129,13 +132,15 @@ public class AddAndEditFoodActivity extends BaseActivity {
             updateMap.put("price", Integer.parseInt(strPrice));
             updateMap.put("sale", Integer.parseInt(strDiscount));
             updateMap.put("popular", isPopular);
+
             if (isNewImageSelected) {
                 StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("food/" + UUID.randomUUID().toString() + ".jpg");
                 UploadTask uploadTask = storageRef.putFile(selectedImageUri);
+
                 uploadTask.addOnSuccessListener(taskSnapshot -> {
                     storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         updateMap.put("image", uri.toString());
-                        ControllerApplication.get(this).getFoodDatabaseReference().child(String.valueOf(mCart.getId())).updateChildren(updateMap, (error, ref) -> {
+                        ControllerApplication.get(this).getFoodDatabaseReference().child(String.valueOf(food.getId())).updateChildren(updateMap, (error, ref) -> {
                                     showUpdateResultMessage(error);
                                 });
                     }).addOnFailureListener(exception -> {
@@ -147,19 +152,42 @@ public class AddAndEditFoodActivity extends BaseActivity {
                     showProgressDialog(false);
                 });
             } else {
-                ControllerApplication.get(this).getFoodDatabaseReference().child(String.valueOf(mCart.getId())).updateChildren(updateMap, (error, ref) -> {
+                ControllerApplication.get(this).getFoodDatabaseReference().child(String.valueOf(food.getId())).updateChildren(updateMap, (error, ref) -> {
                             showUpdateResultMessage(error);
                         });
             }
         } else {
-            FoodObject food = new FoodObject(
-                    System.currentTimeMillis(), strName, strDescription, Integer.parseInt(strPrice), Integer.parseInt(strDiscount), isNewImageSelected ? selectedImageUri.toString() : "URL_img_default", isPopular
-            );
-            ControllerApplication.get(AddAndEditFoodActivity.this).getFoodDatabaseReference().child(String.valueOf(food.getId())).setValue(food, (error, ref) -> {
-                        showAddResultMessage(error);
+            if (isNewImageSelected) {
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("food/" + UUID.randomUUID().toString() + ".jpg");
+                UploadTask uploadTask = storageRef.putFile(selectedImageUri);
+
+                uploadTask.addOnSuccessListener(taskSnapshot -> {
+                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        FoodObject food = new FoodObject(
+                                System.currentTimeMillis(), strName, strDescription, Integer.parseInt(strPrice), Integer.parseInt(strDiscount), uri.toString(), isPopular
+                        );
+                        ControllerApplication.get(AddAndEditFoodActivity.this).getFoodDatabaseReference().child(String.valueOf(food.getId())).setValue(food, (error, ref) -> {
+                                    showAddResultMessage(error);
+                                });
+                    }).addOnFailureListener(exception -> {
+                        Toast.makeText(AddAndEditFoodActivity.this, getString(R.string.get_img_url_failed), Toast.LENGTH_SHORT).show();
+                        showProgressDialog(false);
                     });
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(AddAndEditFoodActivity.this, getString(R.string.upload_img_failed), Toast.LENGTH_SHORT).show();
+                    showProgressDialog(false);
+                });
+            } else {
+                FoodObject food = new FoodObject(
+                        System.currentTimeMillis(), strName, strDescription, Integer.parseInt(strPrice), Integer.parseInt(strDiscount), "URL_img_default", isPopular
+                );
+                ControllerApplication.get(AddAndEditFoodActivity.this).getFoodDatabaseReference().child(String.valueOf(food.getId())).setValue(food, (error, ref) -> {
+                            showAddResultMessage(error);
+                        });
+            }
         }
     }
+
 
     private void showUpdateResultMessage(DatabaseError error) {
         if (error == null) {

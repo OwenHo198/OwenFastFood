@@ -39,35 +39,32 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         if (cart == null) {
             return;
         }
-        GlideUtils.loadUrl(cart.getImage(), holder.mItemCartBinding.imgFoodCart);
-        holder.mItemCartBinding.tvFoodNameCart.setText(cart.getName());
-        String strFoodPriceCart = cart.getPrice() + Constant.CURRENCY;
-        if (cart.getSale() > 0) {
+        GlideUtils.loadUrl(cart.image, holder.mItemCartBinding.imgFoodCart);
+        holder.mItemCartBinding.tvFoodNameCart.setText(cart.food_name);
+        String strFoodPriceCart = cart.price + Constant.CURRENCY;
+        if (cart.sale > 0) {
             strFoodPriceCart = cart.getRealPrice() + Constant.CURRENCY;
         }
         holder.mItemCartBinding.tvFoodPriceCart.setText(strFoodPriceCart);
-        holder.mItemCartBinding.tvCount.setText(String.valueOf(cart.getCount()));
+        holder.mItemCartBinding.tvCount.setText(String.valueOf(cart.quantity));
         holder.mItemCartBinding.tvSubtract.setOnClickListener(v -> {
-            String strCount = holder.mItemCartBinding.tvCount.getText().toString();
-            int count = Integer.parseInt(strCount);
-            if (count <= 1) {
+            if (cart.quantity <= 1) {
                 return;
             }
-            int newCount = count - 1;
-            holder.mItemCartBinding.tvCount.setText(String.valueOf(newCount));
+            cart.quantity--;
+            holder.mItemCartBinding.tvCount.setText(String.valueOf(cart.quantity));
 
-            int totalPrice = cart.getRealPrice() * newCount;
-            cart.setCount(newCount);
-            cart.setTotalPrice(totalPrice);
+            int totalPrice = cart.getRealPrice() * cart.quantity;
+            cart.price = totalPrice;
             iClickListener.updateItemFood(cart, holder.getAdapterPosition());
         });
 
         holder.mItemCartBinding.tvAdd.setOnClickListener(v -> {
-            int newCount = Integer.parseInt(holder.mItemCartBinding.tvCount.getText().toString()) + 1;
-            holder.mItemCartBinding.tvCount.setText(String.valueOf(newCount));
-            int totalPrice = cart.getRealPrice() * newCount;
-            cart.setCount(newCount);
-            cart.setTotalPrice(totalPrice);
+            cart.quantity++;
+            holder.mItemCartBinding.tvCount.setText(String.valueOf( cart.quantity));
+            int totalPrice = cart.getRealPrice() *  cart.quantity;
+
+            cart.price = totalPrice;
             iClickListener.updateItemFood(cart, holder.getAdapterPosition());
         });
 

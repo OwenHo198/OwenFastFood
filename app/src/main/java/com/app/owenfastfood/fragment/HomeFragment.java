@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.app.owenfastfood.model.Cart;
+import com.app.owenfastfood.model.FoodObject;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -34,16 +35,16 @@ import java.util.List;
 
 public class HomeFragment extends BaseFragment {
     private FragmentHomeBinding mFragmentHomeBinding;
-    private List<Cart> mListCart;
-    private List<Cart> mListCartPopular;
+    private List<FoodObject> food_list;
+    private List<FoodObject> popular_food_list;
     private final Handler mHandlerBanner = new Handler();
     private final Runnable mRunnableBanner = new Runnable() {
         @Override
         public void run() {
-            if (mListCartPopular == null || mListCartPopular.isEmpty()) {
+            if (popular_food_list == null || popular_food_list.isEmpty()) {
                 return;
             }
-            if (mFragmentHomeBinding.viewpager2.getCurrentItem() == mListCartPopular.size() - 1) {
+            if (mFragmentHomeBinding.viewpager2.getCurrentItem() == popular_food_list.size() - 1) {
                 mFragmentHomeBinding.viewpager2.setCurrentItem(0);
                 return;
             }
@@ -78,7 +79,7 @@ public class HomeFragment extends BaseFragment {
             public void afterTextChanged(Editable s) {
                 String strKey = s.toString().trim();
                 if (strKey.equals("") || strKey.length() == 0) {
-                    if (mListCart != null) mListCart.clear();
+                    if (food_list != null) food_list.clear();
                     getListFoodFromFirebase("");
                 }
             }
@@ -111,21 +112,21 @@ public class HomeFragment extends BaseFragment {
     private void displayListFoodSuggest() {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mFragmentHomeBinding.rcvFood.setLayoutManager(gridLayoutManager);
-        FoodGridAdapter mFoodGridAdapter = new FoodGridAdapter(mListCart, this::goToFoodDetail);
+        FoodGridAdapter mFoodGridAdapter = new FoodGridAdapter(food_list, this::goToFoodDetail);
         mFragmentHomeBinding.rcvFood.setAdapter(mFoodGridAdapter);
     }
 
-    private List<Cart> getListFoodPopular() {
-        mListCartPopular = new ArrayList<>();
-        if (mListCart == null || mListCart.isEmpty()) {
-            return mListCartPopular;
+    private List<FoodObject> getListFoodPopular() {
+        popular_food_list = new ArrayList<>();
+        if (food_list == null || food_list.isEmpty()) {
+            return popular_food_list;
         }
-        for (Cart cart : mListCart) {
-            if (cart.isPopular()) {
-                mListCartPopular.add(cart);
+        for (FoodObject food : food_list) {
+            if (food.isPopular()) {
+                popular_food_list.add(food);
             }
         }
-        return mListCartPopular;
+        return popular_food_list;
     }
 
     private void getListFoodFromFirebase(String key) {
@@ -136,18 +137,18 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mFragmentHomeBinding.layoutContent.setVisibility(View.VISIBLE);
-                mListCart = new ArrayList<>();
+                food_list = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Cart cart = dataSnapshot.getValue(Cart.class);
-                    if (cart == null) {
+                    FoodObject food = dataSnapshot.getValue(FoodObject.class);
+                    if (food == null) {
                         return;
                     }
                     if (StringUtil.isEmpty(key)) {
-                        mListCart.add(0, cart);
+                        food_list.add(0, food);
                     } else {
-                        if (GlobalFunction.getTextSearch(cart.getName()).toLowerCase().trim()
+                        if (GlobalFunction.getTextSearch(food.getName()).toLowerCase().trim()
                                 .contains(GlobalFunction.getTextSearch(key).toLowerCase().trim())) {
-                            mListCart.add(0, cart);
+                            food_list.add(0, food);
                         }
                     }
                 }
@@ -163,14 +164,14 @@ public class HomeFragment extends BaseFragment {
 
     private void searchFood() {
         String strKey = mFragmentHomeBinding.edtSearchName.getText().toString().trim();
-        if (mListCart != null) mListCart.clear();
+        if (food_list != null) food_list.clear();
         getListFoodFromFirebase(strKey);
         GlobalFunction.hideSoftKeyboard(getActivity());
     }
 
-    private void goToFoodDetail(@NonNull Cart cart) {
+    private void goToFoodDetail(@NonNull FoodObject food) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Constant.KEY_INTENT_FOOD_OBJECT, cart);
+        bundle.putSerializable(Constant.KEY_INTENT_FOOD_OBJECT, food);
         GlobalFunction.startActivity(getActivity(), FoodDetailActivity.class, bundle);
     }
 

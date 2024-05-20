@@ -10,42 +10,14 @@ import java.util.List;
 @Entity(tableName = "cart")
 public class Cart implements Serializable {
     @PrimaryKey(autoGenerate = true)
-    private long id;
-    private String idacc;
-    private String name;
-    private String image;
-    private String description;
-    private int price;
-    private int sale;
-    private int count;
-    private int totalPrice;
-    private boolean popular;
-    @Ignore
-    private List<Image> images;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
+    public long id;
+    public String user_id;
+    public long food_id;
+    public String food_name;
+    public String image;
+    public int quantity;
+    public int price;
+    public int sale;
 
     public int getRealPrice() {
         if (sale <= 0) {
@@ -54,66 +26,13 @@ public class Cart implements Serializable {
         return price - (price * sale / 100);
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
+    public Cart(String user_id, long food_id, String food_name, String image, int quantity, int price, int sale) {
+        this.user_id = user_id;
+        this.food_id = food_id;
+        this.food_name = food_name;
         this.image = image;
-    }
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getSale() {
-        return sale;
-    }
-
-    public void setSale(int sale) {
+        this.quantity = quantity;
+        this.price = price;
         this.sale = sale;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public int getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public boolean isPopular() {
-        return popular;
-    }
-
-    public void setPopular(boolean popular) {
-        this.popular = popular;
-    }
-
-    public List<Image> getImages() {
-        return images;
-    }
-
-    public void setImages(List<Image> images) {
-        this.images = images;
-    }
-
-    public String getIdacc() {
-        return idacc;
-    }
-
-    public void setIdacc(String idacc) {
-        this.idacc = idacc;
     }
 }

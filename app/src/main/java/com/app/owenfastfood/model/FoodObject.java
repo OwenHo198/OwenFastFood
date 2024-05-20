@@ -29,6 +29,13 @@ public class FoodObject implements Serializable {
         this.popular = popular;
     }
 
+    public int getRealPrice() {
+        if (sale <= 0) {
+            return price;
+        }
+        return price - (price * sale / 100);
+    }
+
 
 
     public long getId() {

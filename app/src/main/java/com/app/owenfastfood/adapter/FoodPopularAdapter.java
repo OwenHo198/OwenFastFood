@@ -10,14 +10,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.owenfastfood.databinding.ItemFoodPopularBinding;
 import com.app.owenfastfood.listener.IOnClickFoodItemListener;
 import com.app.owenfastfood.model.Cart;
+import com.app.owenfastfood.model.FoodObject;
 import com.app.owenfastfood.utils.GlideUtils;
 
 import java.util.List;
 
 public class FoodPopularAdapter extends RecyclerView.Adapter<FoodPopularAdapter.FoodPopularViewHolder> {
-    private final List<Cart> mListCarts;
+    private final List<FoodObject> mListCarts;
     public final IOnClickFoodItemListener iOnClickFoodItemListener;
-    public FoodPopularAdapter(List<Cart> mListCarts, IOnClickFoodItemListener iOnClickFoodItemListener) {
+    public FoodPopularAdapter(List<FoodObject> mListCarts, IOnClickFoodItemListener iOnClickFoodItemListener) {
         this.mListCarts = mListCarts;
         this.iOnClickFoodItemListener = iOnClickFoodItemListener;
     }
@@ -31,7 +32,7 @@ public class FoodPopularAdapter extends RecyclerView.Adapter<FoodPopularAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull FoodPopularViewHolder holder, int position) {
-        Cart cart = mListCarts.get(position);
+        FoodObject cart = mListCarts.get(position);
         if (cart == null) {
             return;
         }

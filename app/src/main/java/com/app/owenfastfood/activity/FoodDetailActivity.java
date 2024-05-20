@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.app.owenfastfood.model.Cart;
+import com.app.owenfastfood.model.FoodObject;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.app.owenfastfood.R;
 import com.app.owenfastfood.constant.Constant;
@@ -23,10 +24,11 @@ import com.google.firebase.auth.FirebaseUser;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FoodDetailActivity extends BaseActivity {
     private ActivityFoodDetailBinding mActivityFoodDetailBinding;
-    private Cart mCart;
+    private FoodObject food;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +43,7 @@ public class FoodDetailActivity extends BaseActivity {
     private void getDataIntent() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            mCart = (Cart) bundle.get(Constant.KEY_INTENT_FOOD_OBJECT);
+            food = (FoodObject) bundle.get(Constant.KEY_INTENT_FOOD_OBJECT);
         }
     }
 
@@ -52,31 +54,30 @@ public class FoodDetailActivity extends BaseActivity {
     }
 
     private void setDataFoodDetail() {
-        if (mCart == null) {
+        if (food == null) {
             return;
         }
-        GlideUtils.loadUrlBanner(mCart.getImage(), mActivityFoodDetailBinding.imageFood);
-        if (mCart.getSale() <= 0) {
+        GlideUtils.loadUrlBanner(food.getImage(), mActivityFoodDetailBinding.imageFood);
+        if (food.getSale() <= 0) {
             mActivityFoodDetailBinding.tvSaleOff.setVisibility(View.GONE);
             mActivityFoodDetailBinding.tvPrice.setVisibility(View.GONE);
-            String strPrice = mCart.getPrice() + Constant.CURRENCY;
+            String strPrice = food.getPrice() + Constant.CURRENCY;
             mActivityFoodDetailBinding.tvPriceSale.setText(strPrice);
         } else {
             mActivityFoodDetailBinding.tvSaleOff.setVisibility(View.VISIBLE);
             mActivityFoodDetailBinding.tvPrice.setVisibility(View.VISIBLE);
-            String strSale = "Discount " + mCart.getSale() + "%";
+            String strSale = "Discount " + food.getSale() + "%";
             mActivityFoodDetailBinding.tvSaleOff.setText(strSale);
-            String strPriceOld = mCart.getPrice() + Constant.CURRENCY;
+            String strPriceOld = food.getPrice() + Constant.CURRENCY;
             mActivityFoodDetailBinding.tvPrice.setText(strPriceOld);
             mActivityFoodDetailBinding.tvPrice.setPaintFlags(mActivityFoodDetailBinding.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            String strRealPrice = mCart.getRealPrice() + Constant.CURRENCY;
+            String strRealPrice = food.getRealPrice() + Constant.CURRENCY;
             mActivityFoodDetailBinding.tvPriceSale.setText(strRealPrice);
         }
-        mActivityFoodDetailBinding.tvFoodName.setText(mCart.getName());
-        mActivityFoodDetailBinding.tvFoodDescription.setText(mCart.getDescription());
+        mActivityFoodDetailBinding.tvFoodName.setText(food.getName());
+        mActivityFoodDetailBinding.tvFoodDescription.setText(food.getDescription());
         setStatusButtonAddToCart();
     }
-
     private void setStatusButtonAddToCart() {
         if (isFoodInCart()) {
             mActivityFoodDetailBinding.tvAddToCart.setBackgroundResource(R.drawable.bg_gray_shape_corner_6);
@@ -88,16 +89,16 @@ public class FoodDetailActivity extends BaseActivity {
             mActivityFoodDetailBinding.tvAddToCart.setTextColor(ContextCompat.getColor(this, R.color.white));
         }
     }
-
     private boolean isFoodInCart() {
-        List<Cart> list = FoodDatabase.getInstance(this).foodDAO().checkFoodInCart(mCart.getId());
-        return list != null && !list.isEmpty();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = currentUser.getUid();
+        Cart cart = FoodDatabase.getInstance(this).cartDAO().findCartByFoodId(userId, food.getId());
+        return cart != null;
     }
-
     private void initListener() {
         mActivityFoodDetailBinding.tvAddToCart.setOnClickListener(v -> onClickAddToCart());
     }
-
+    private int food_count = 1;
     public void onClickAddToCart() {
         if (isFoodInCart()) {
             return;
@@ -113,47 +114,42 @@ public class FoodDetailActivity extends BaseActivity {
         TextView tvAddCount = viewDialog.findViewById(R.id.tv_add);
         TextView tvCancel = viewDialog.findViewById(R.id.tv_cancel);
         TextView tvAddCart = viewDialog.findViewById(R.id.tv_add_cart);
-        GlideUtils.loadUrl(mCart.getImage(), imgFoodCart);
-        tvFoodNameCart.setText(mCart.getName());
-        int totalPrice = mCart.getRealPrice();
+        GlideUtils.loadUrl(food.getImage(), imgFoodCart);
+        tvFoodNameCart.setText(food.getName());
+        int totalPrice = food.getRealPrice();
         String strTotalPrice = totalPrice + Constant.CURRENCY;
         tvFoodPriceCart.setText(strTotalPrice);
-        mCart.setCount(1);
-        mCart.setTotalPrice(totalPrice);
-
         tvSubtractCount.setOnClickListener(v -> {
-            int count = Integer.parseInt(tvCount.getText().toString());
-            if (count <= 1) {
+            if (food_count <= 1) {
                 return;
             }
-            int newCount = Integer.parseInt(tvCount.getText().toString()) - 1;
-            tvCount.setText(String.valueOf(newCount));
-            int totalPrice1 = mCart.getRealPrice() * newCount;
-            String strTotalPrice1 = totalPrice1 + Constant.CURRENCY;
-            tvFoodPriceCart.setText(strTotalPrice1);
-            mCart.setCount(newCount);
-            mCart.setTotalPrice(totalPrice1);
+            food_count--;
+            tvCount.setText(String.valueOf(food_count));
+            int newTotalPrice = food.getRealPrice() * food_count;
+            String strNewTotalPrice = newTotalPrice + Constant.CURRENCY;
+            tvFoodPriceCart.setText(strNewTotalPrice);
         });
-
         tvAddCount.setOnClickListener(v -> {
-            int newCount = Integer.parseInt(tvCount.getText().toString()) + 1;
-            tvCount.setText(String.valueOf(newCount));
-            int totalPrice2 = mCart.getRealPrice() * newCount;
-            String strTotalPrice2 = totalPrice2 + Constant.CURRENCY;
-            tvFoodPriceCart.setText(strTotalPrice2);
-            mCart.setCount(newCount);
-            mCart.setTotalPrice(totalPrice2);
+            food_count++;
+            tvCount.setText(String.valueOf(food_count));
+            int newTotalPrice = food.getRealPrice() * food_count;
+            String strNewTotalPrice = newTotalPrice + Constant.CURRENCY;
+            tvFoodPriceCart.setText(strNewTotalPrice);
         });
 
         tvCancel.setOnClickListener(v -> bottomSheetDialog.dismiss());
+
         tvAddCart.setOnClickListener(v -> {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             if (currentUser == null) {
                 return;
             }
             String userId = currentUser.getUid();
-            mCart.setIdacc(userId);
-            FoodDatabase.getInstance(FoodDetailActivity.this).foodDAO().insertFood(mCart);
+            Cart cart = new Cart(
+                    userId, food.getId(),  food.getName(), food.getImage(), food_count, food.getPrice(), food.getSale()
+            );
+
+            FoodDatabase.getInstance(FoodDetailActivity.this).cartDAO().insertFood(cart);
             bottomSheetDialog.dismiss();
             setStatusButtonAddToCart();
             EventBus.getDefault().post(new ReloadListCartEvent());

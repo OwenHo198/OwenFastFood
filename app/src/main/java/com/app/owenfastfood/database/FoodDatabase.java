@@ -19,5 +19,5 @@ public abstract class FoodDatabase extends RoomDatabase {
         return instance;
     }
 
-    public abstract FoodDAO foodDAO();
+    public abstract CartDAO cartDAO();
 }
